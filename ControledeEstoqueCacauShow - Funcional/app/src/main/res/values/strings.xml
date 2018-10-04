@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Controle de Estoque Cacau Show</string>
+    <string name="navigation_drawer_open">abrir</string>
+    <string name="navigation_drawer_close">fechar</string>
+    <string name="sair">Sair</string>
+
+</resources>
