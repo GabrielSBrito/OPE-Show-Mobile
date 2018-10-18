@@ -8,43 +8,70 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.SearchView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_tela_inicial.*
 import kotlinx.android.synthetic.main.toolbar.*
 
-class Kits : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class Kits : DebugActivity(), NavigationView.OnNavigationItemSelectedListener {
+
+    private var kits = listOf<Kit>()
+    var recyclerKits: RecyclerView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.kits)
 
-
-
-
-        /*botaoSair.setOnClickListener{
-            val returnIntent = Intent()
-            returnIntent.putExtra("Result", "Saída do App")
-            setResult(Activity.RESULT_OK, returnIntent)
-            finish()
-        }*/
-
-        // ações na toolbar continuam funcionando
-        //supportActionBar?.title = "Sair"
-        //supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
-        //setSupportActionBar(toolbar)
-
+        setSupportActionBar(toolbar)
         congiguraMenuLateral()
+
+        recyclerKits = findViewById(R.id.recyclerKits)
+        recyclerKits?.layoutManager = LinearLayoutManager(this)
+        recyclerKits?.itemAnimator = DefaultItemAnimator()
+        recyclerKits?.setHasFixedSize(true)
     }
 
+    override fun onResume() {
+        super.onResume()
+        taskKits()
+    }
 
+    fun taskKits() {
+        Thread {
+            this.kits = KitService.getKit(context = this)
+            runOnUiThread {
+                //Atualizar Lista
+                recyclerKits?.adapter = KitAdapter(kits) { onClickKit(it) }
+            }
+        }.start()
+    }
+
+    fun onClickKit(kit: Kit) {
+
+        Toast.makeText(this, "Clicou no ${kit.nome}", Toast.LENGTH_SHORT).show()
+
+
+    }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         // infla o menu com os botões da ActionBar
-        menuInflater.inflate(R.menu.menu_main, menu)
+        menuInflater.inflate(R.menu.menu_kits, menu)
         return true
+    }
+
+    private var REQUEST_CADASTRO = 1
+    private var REQUEST_REMOVE= 2
+    // esperar o retorno do cadastro da disciplina
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_CADASTRO || requestCode == REQUEST_REMOVE ) {
+            // atualizar lista de disciplinas
+            taskKits()
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -53,16 +80,18 @@ class Kits : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         // verificar qual item foi clicado e mostrar a mensagem
         //Toast na tela
         // a comparação é feita com o recurso de id definido no xml
-        if (id == R.id.sair) {
-            Toast.makeText(this, "Saindo",
-                    Toast.LENGTH_LONG).show()
-            val returnIntent = Intent()
-            returnIntent.putExtra("Result", "Saída do App")
-            setResult(Activity.RESULT_OK, returnIntent)
-            finish()
+        if (id == R.id.action_adicionar_kit) {
+            Toast.makeText(this, "Adcionar", Toast.LENGTH_LONG).show()
+            // iniciar activity de cadastro
+            val intent = Intent(this, DisciplinaCadastroActivity::class.java)
+            startActivityForResult(intent, REQUEST_CADASTRO)
+
+
         }
         return super.onOptionsItemSelected(item)
     }
+
+
 
     private fun congiguraMenuLateral(){
         var toolbar = toolbar
@@ -105,8 +134,10 @@ class Kits : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
                 startActivity(intent)
             }
             R.id.nav_sair -> {
-                Toast.makeText(this, "Saindo..", Toast.LENGTH_SHORT).show()
-                finish()
+                Toast.makeText(this, "Saindo...", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finishAndRemoveTask()
             }
             R.id.nav_config -> {
                 Toast.makeText(this, "Clicou Config", Toast.LENGTH_SHORT).show()
@@ -117,5 +148,4 @@ class Kits : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListene
         drawer.closeDrawer(GravityCompat.START)
         return true
     }
-
 }

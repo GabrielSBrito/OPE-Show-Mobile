@@ -88,8 +88,10 @@ class ControleDeValidade : DebugActivity(), NavigationView.OnNavigationItemSelec
                 startActivity(intent)
             }
             R.id.nav_sair -> {
-                Toast.makeText(this, "Saindo..", Toast.LENGTH_SHORT).show()
-                finish()
+                Toast.makeText(this, "Saindo...", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finishAndRemoveTask()
             }
             R.id.nav_config -> {
                 Toast.makeText(this, "Clicou Config", Toast.LENGTH_SHORT).show()

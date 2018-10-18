@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import kotlinx.android.synthetic.main.login.*
 
@@ -26,12 +27,35 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
+
     fun onClickLogin() {
+
         val campoUsuario = campo_usuario
         val campoSenha = campo_senha
         val valorUsuario = campoUsuario.text.toString()
         val valorSenha = campoSenha.text.toString()
-        if (valorUsuario == "aluno" && valorSenha == "impacta") {
+
+        Thread{
+            var verificaLogin = LoginService.login(valorUsuario,valorSenha)
+            Log.d("WS_LMS", verificaLogin.toString())
+            runOnUiThread {
+                Log.d("WS_LMS", "Retorno"+verificaLogin.toString())
+                if (verificaLogin){
+                    val intent = Intent(contexo, TelaInicialActivity::class.java)
+                    intent.putExtra("nome", valorUsuario)
+                    startActivityForResult(intent, 1)
+
+                }else if (valorUsuario == "aluno"){
+                    Toast.makeText(contexo, "Senha incorreta", Toast.LENGTH_LONG).show()
+                }
+                else {
+                    Toast.makeText(contexo, "Usuário incorreto", Toast.LENGTH_LONG).show()
+                }
+            }
+        }.start()
+
+        /*if (valorUsuario == "aluno" && valorSenha == "impacta") {
             val intent = Intent(contexo, TelaInicialActivity::class.java)
             intent.putExtra("nome", valorUsuario)
             startActivityForResult(intent, 1)
@@ -41,6 +65,6 @@ class MainActivity : AppCompatActivity() {
         }
         else {
             Toast.makeText(contexo, "Usuário incorreto", Toast.LENGTH_LONG).show()
-        }
+        }*/
     }
 }
