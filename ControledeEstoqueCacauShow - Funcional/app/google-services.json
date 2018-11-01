@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1068206456828",
+    "firebase_url": "https://gabrielsbrito-9b7a8.firebaseio.com",
+    "project_id": "gabrielsbrito-9b7a8",
+    "storage_bucket": "gabrielsbrito-9b7a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1068206456828:android:90e282b1caf399e9",
+        "android_client_info": {
+          "package_name": "br.com.cacaushow.controledeestoquecacaushow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1068206456828-fa1fau4t5t7a4eejoktj0kpn1iqk4m4o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6ehEWIJYEq2wKLfwH_ZgyMSIzl-7hnQE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

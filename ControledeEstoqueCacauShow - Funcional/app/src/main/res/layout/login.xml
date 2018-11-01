@@ -47,6 +47,12 @@
         android:inputType="textPassword"
         android:textSize="24sp" />
 
+    <CheckBox
+        android:id="@+id/lembrarLogin"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:text="Lembrar Login" />
+
     <Button
         android:id="@+id/botao_login"
         android:layout_width="match_parent"

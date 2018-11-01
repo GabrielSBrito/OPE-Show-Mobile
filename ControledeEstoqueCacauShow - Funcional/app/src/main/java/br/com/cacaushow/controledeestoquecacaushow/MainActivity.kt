@@ -15,8 +15,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login)
+        Prefs.setString("","")
+        val str = Prefs.getString("")
+
+
+
 
         botao_login.setOnClickListener {onClickLogin()}
+
+        var lembrar = Prefs.getBoolean("lembrar")
+        var usuario = Prefs.getString("usuario")
+        var senha = Prefs.getString("senha")
+        campo_usuario.setText(usuario)
+        campo_senha.setText(senha)
+        lembrarLogin.isChecked = lembrar
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -35,6 +48,16 @@ class MainActivity : AppCompatActivity() {
         val campoSenha = campo_senha
         val valorUsuario = campoUsuario.text.toString()
         val valorSenha = campoSenha.text.toString()
+        val lembrar = findViewById<CheckBox>(R.id.lembrarLogin).isChecked
+
+        Prefs.setBoolean("lembrar",lembrar)
+        if (lembrar){
+            Prefs.setString("usuario",valorUsuario)
+            Prefs.setString("senha",valorSenha)
+        }else{
+            Prefs.setString("usuario","")
+            Prefs.setString("senha","")
+        }
 
         Thread{
             var verificaLogin = LoginService.login(valorUsuario,valorSenha)

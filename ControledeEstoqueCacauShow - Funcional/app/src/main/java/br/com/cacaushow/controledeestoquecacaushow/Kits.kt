@@ -1,6 +1,7 @@
 package br.com.cacaushow.controledeestoquecacaushow
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -19,9 +20,12 @@ import kotlinx.android.synthetic.main.activity_tela_inicial.*
 import kotlinx.android.synthetic.main.toolbar.*
 
 class Kits : DebugActivity(), NavigationView.OnNavigationItemSelectedListener {
-
+    private val context: Context get() = this
     private var kits = listOf<Kit>()
     var recyclerKits: RecyclerView? = null
+
+    private var REQUEST_CADASTRO = 1
+    private var REQUEST_REMOVE= 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +40,20 @@ class Kits : DebugActivity(), NavigationView.OnNavigationItemSelectedListener {
         recyclerKits?.setHasFixedSize(true)
     }
 
+
+
     override fun onResume() {
         super.onResume()
         taskKits()
+    }
+
+
+    fun enviaNotificacao(){
+        val intent = Intent(this,KitActivity::class.java)
+
+        intent.putExtra("kit",this.kits[0])
+        NotificationUtil.create(this,1,intent,"CacauShow","Você tem novas atividaes")
+
     }
 
     fun taskKits() {
@@ -47,6 +62,8 @@ class Kits : DebugActivity(), NavigationView.OnNavigationItemSelectedListener {
             runOnUiThread {
                 //Atualizar Lista
                 recyclerKits?.adapter = KitAdapter(kits) { onClickKit(it) }
+                enviaNotificacao()
+
             }
         }.start()
     }
@@ -54,7 +71,9 @@ class Kits : DebugActivity(), NavigationView.OnNavigationItemSelectedListener {
     fun onClickKit(kit: Kit) {
 
         Toast.makeText(this, "Clicou no ${kit.nome}", Toast.LENGTH_SHORT).show()
-
+        val intent = Intent(context, KitActivity::class.java)
+        intent.putExtra("kit", kit)
+        startActivityForResult(intent, REQUEST_REMOVE)
 
     }
 
@@ -64,8 +83,7 @@ class Kits : DebugActivity(), NavigationView.OnNavigationItemSelectedListener {
         return true
     }
 
-    private var REQUEST_CADASTRO = 1
-    private var REQUEST_REMOVE= 2
+
     // esperar o retorno do cadastro da disciplina
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_CADASTRO || requestCode == REQUEST_REMOVE ) {
